@@ -317,7 +317,9 @@ export async function createAgentSession(options: CreateAgentSessionOptions = {}
 			// SDKs treat timeout=0 as 0ms (immediate timeout), not "no timeout".
 			// Use max int32 to effectively disable the timeout.
 			const effectiveTimeoutMs = httpIdleTimeoutMs === 0 ? 2147483647 : httpIdleTimeoutMs;
-			const timeoutMs = options?.timeoutMs ?? providerRetrySettings.timeoutMs ?? effectiveTimeoutMs;
+			const timeoutMs =
+				options?.timeoutMs ??
+				(model.provider === "ark" ? 2147483647 : (providerRetrySettings.timeoutMs ?? effectiveTimeoutMs));
 			const websocketConnectTimeoutMs =
 				options?.websocketConnectTimeoutMs ?? settingsManager.getWebSocketConnectTimeoutMs();
 			const headerRunner = extensionRunnerRef.current;
